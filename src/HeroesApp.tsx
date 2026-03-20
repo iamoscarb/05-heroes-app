@@ -4,9 +4,7 @@ import { appRouter } from './router/app.router'
 export const HeroesApp = () => {
     return (
         <>
-            <RouterProvider router={appRouter}>
-
-            </RouterProvider>
+            <RouterProvider router={appRouter} />
         </>
     )
 }
