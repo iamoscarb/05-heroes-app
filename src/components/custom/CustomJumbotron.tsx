@@ -1,5 +1,3 @@
-import { CustomBreadcrums } from "./CustomBreadcrums";
-
 interface Props {
     title: string;
     description?: string;
@@ -20,9 +18,6 @@ export const CustomJumbotron = ({ title, description }: Props) => {
                     )
                 }
             </div>
-            <CustomBreadcrums currentPage="Búscador de héroes" breadcrumbs={
-                [{ label: 'Home', to: '/' }]
-            } />
         </>
     )
 }
