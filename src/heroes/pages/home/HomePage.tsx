@@ -71,7 +71,7 @@ export const HomePage = () => {
                             Heroes (12)
                         </TabsTrigger>
 
-                        <TabsTrigger value="villains"
+                        <TabsTrigger value="villians"
                             onClick={() =>
                                 setSearchParams((prev) => {
                                     prev.set('tab', 'villians');

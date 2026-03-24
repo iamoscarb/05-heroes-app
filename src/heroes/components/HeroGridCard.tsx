@@ -57,7 +57,7 @@ export const HeroGridCard = ({ heroe }: Props) => {
                 <div className="flex justify-between items-start">
                     <div className="space-y-1">
                         <h3 className="font-bold text-lg leading-tight">{heroe.alias}</h3>
-                        <p className="text-sm text-gray-600">{heroe.name}</p>
+                        <p className="text-sm text-gray-900">{heroe.name}</p>
                     </div>
                     <Badge className="text-xs bg-green-100 text-green-800 border-green-200">{heroe.category}</Badge>
                 </div>
