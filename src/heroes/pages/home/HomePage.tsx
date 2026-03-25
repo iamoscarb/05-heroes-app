@@ -19,12 +19,13 @@ export const HomePage = () => {
     const activeTab = searchParams.get('tab') ?? 'all';
     const page = searchParams.get('page') ?? '1';
     const limit = searchParams.get('limit') ?? '6';
+    const category = searchParams.get('category') ?? 'all';
 
     const selectedTab = useMemo(() => {
         return validTabs.includes(activeTab) ? activeTab : 'all';
     }, [activeTab]);
 
-    const { data: heroesResponse } = usePaginatedHero(+page, +limit)
+    const { data: heroesResponse } = usePaginatedHero(+page, +limit, category)
     const { data: summary } = useHeroSummary()
 
     return (
@@ -46,6 +47,8 @@ export const HomePage = () => {
                             onClick={() =>
                                 setSearchParams((prev) => {
                                     prev.set('tab', 'all');
+                                    prev.set('category', 'all');
+                                    prev.set('page', '1');
                                     return prev;
                                 })}>
                             All Characters ({summary?.totalHeroes})
@@ -64,6 +67,9 @@ export const HomePage = () => {
                             onClick={() =>
                                 setSearchParams((prev) => {
                                     prev.set('tab', 'heroes');
+                                    prev.set('category', 'hero');
+                                    prev.set('page', '1');
+
                                     return prev;
                                 })}>
                             Heroes ({summary?.heroCount})
@@ -73,6 +79,9 @@ export const HomePage = () => {
                             onClick={() =>
                                 setSearchParams((prev) => {
                                     prev.set('tab', 'villians');
+                                    prev.set('category', 'villain');
+                                    prev.set('page', '1');
+
                                     return prev;
                                 })}>
                             Villains ({summary?.villainCount})
@@ -87,19 +96,16 @@ export const HomePage = () => {
                     <TabsContent value="favorites">
                         {/* Mostrar todos los personajes favoritos */}
                         <h1>Favoritos</h1>
-                        <HeroGrid heroes={[]} />
                     </TabsContent>
 
                     <TabsContent value="heroes">
                         {/* Mostrar todos los heroes */}
-                        <h1>Heroes</h1>
-                        <HeroGrid heroes={[]} />
+                        <HeroGrid heroes={heroesResponse?.heroes ?? []} />
                     </TabsContent>
 
                     <TabsContent value="villians">
                         {/* Mostrar todos los villanos */}
-                        <h1>Villanos</h1>
-                        <HeroGrid heroes={[]} />
+                        <HeroGrid heroes={heroesResponse?.heroes ?? []} />
                     </TabsContent>
 
                 </Tabs>
