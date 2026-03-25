@@ -26,7 +26,7 @@ export const HeroPage = () => {
                 return "bg-green-500"
             case "inactive":
                 return "bg-gray-500"
-            case "retirado":
+            case "deceased":
                 return "bg-blue-500"
             default:
                 return "bg-gray-500"
@@ -39,7 +39,7 @@ export const HeroPage = () => {
                 return "bg-blue-500"
             case "villain":
                 return "bg-red-500"
-            case "antihéroe":
+            case "antihero":
                 return "bg-purple-500"
             default:
                 return "bg-gray-500"
