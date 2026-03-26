@@ -12,18 +12,21 @@ interface Options {
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-export const searchHeroesAction = async (
-    options: Options
-) => {
-    const { name } = options;
+export const searchHeroesAction = async (options: Options) => {
+    const { name, team, category, universe, status, strength } = options;
 
-    if (!name) {
+    if (!name && !team && !category && !universe && !status && !strength) {
         return [];
     }
 
     const { data } = await heroApi.get<Hero[]>(`/search`, {
         params: {
-            name
+            name,
+            team,
+            category,
+            universe,
+            status,
+            strength
         }
     });
 

@@ -10,8 +10,9 @@ export const SearchPage = () => {
     const [searchParams] = useSearchParams({ tab: 'all' });
 
     const name = searchParams.get('name') ?? undefined;
+    const strength = searchParams.get('strength') ?? undefined;
 
-    const { data: heroesResponse = [] } = useSeachHero({ name })
+    const { data: heroesResponse = [] } = useSeachHero({ name, strength })
     //useQuery
 
     if (!heroesResponse) return <h1>Loading....</h1>
@@ -29,7 +30,13 @@ export const SearchPage = () => {
             <SearchControls />
 
             {/* */}
-            <HeroGrid heroes={heroesResponse} />
+            {
+                heroesResponse.length > 0 ? (
+                    <HeroGrid heroes={heroesResponse} />
+                ) : (
+                    <h4 className="text-center font-bold pb-10">No se encontró información</h4>
+                )
+            }
         </>
     )
 };

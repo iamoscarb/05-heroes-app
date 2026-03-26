@@ -10,10 +10,11 @@ interface Options {
     strength?: string;
 }
 
-export const useSeachHero = ({ name }: Options) => {
+export const useSeachHero = (options: Options) => {
+    const { name, team, category, universe, status, strength } = options;
     return useQuery({
-        queryKey: ['search', { name }],
-        queryFn: () => searchHeroesAction({ name }),
+        queryKey: ['search', { name, team, category, universe, status, strength }],
+        queryFn: () => searchHeroesAction({ name, team, category, universe, status, strength }),
         staleTime: 1000 * 60 * 5,
         retry: false
     })
