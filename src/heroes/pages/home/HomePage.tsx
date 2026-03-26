@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { use, useMemo } from "react"
 import { useSearchParams } from "react-router"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -9,12 +9,15 @@ import { CustomPagination } from "@/components/custom/CustomPagination"
 import { CustomBreadcrums } from "@/components/custom/CustomBreadcrums"
 import { useHeroSummary } from "@/heroes/hooks/useHeroSummary"
 import { usePaginatedHero } from "@/heroes/hooks/usePaginatedHero"
+import { FavoriteHeroContext } from "@/heroes/context/FavoriteHeroContext"
 
 const validTabs = ['all', 'favorites', 'heroes', 'villians'];
 
 export const HomePage = () => {
 
     const [searchParams, setSearchParams] = useSearchParams({ tab: 'all' });
+    const { favoriteCount, favorites } = use(FavoriteHeroContext);
+
 
     const activeTab = searchParams.get('tab') ?? 'all';
     const page = searchParams.get('page') ?? '1';
@@ -60,7 +63,7 @@ export const HomePage = () => {
                                     prev.set('tab', 'favorites');
                                     return prev;
                                 })}>
-                            Favorites (3)
+                            Favorites ({favoriteCount})
                         </TabsTrigger>
 
                         <TabsTrigger value="heroes"
@@ -95,7 +98,7 @@ export const HomePage = () => {
 
                     <TabsContent value="favorites">
                         {/* Mostrar todos los personajes favoritos */}
-                        <h1>Favoritos</h1>
+                        <HeroGrid heroes={favorites ?? []} />
                     </TabsContent>
 
                     <TabsContent value="heroes">
@@ -111,7 +114,11 @@ export const HomePage = () => {
                 </Tabs>
 
                 {/* Pagination */}
-                <CustomPagination totalPages={heroesResponse?.pages ?? 1} />
+                {
+                    selectedTab !== 'favorites' && (
+                        <CustomPagination totalPages={heroesResponse?.pages ?? 1} />
+                    )
+                }
             </>
         </>
     )
