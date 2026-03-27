@@ -1,6 +1,4 @@
 import { Search, Filter, SortAsc, Grid, Plus, SortDesc } from "lucide-react"
-import { useRef } from "react"
-import { useSearchParams } from "react-router"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,12 +6,13 @@ import { Slider } from "@/components/ui/slider"
 import { Accordion, AccordionContent, AccordionItem, } from "@/components/ui/accordion"
 import { CustomSelect } from "@/components/custom/CustomSelect"
 import { teams, categories, universes, statuses } from "../data/selectData"
+import { useSearchControls } from "@/heroes/hooks/useSearchControls"
 
 
 export const SearchControls = () => {
 
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [searchParams, setSearchParams] = useSearchParams({});
+    const { inputRef, searchParams, setSearchParams, handleKeyDown, handleSelected, handleOrderBy, clearAllFilters, setQueryParams } = useSearchControls();
+
     const activeAccordion = searchParams.get('active-accordion') ?? '';
     const selectedStrength = searchParams.get('strength') ?? '0';
     const selectedTeam = searchParams.get('team') ?? 'all';
@@ -21,53 +20,6 @@ export const SearchControls = () => {
     const selectedUniverse = searchParams.get('universe') ?? 'all';
     const selectedStatus = searchParams.get('status') ?? 'all';
     const selectedOrderBy = searchParams.get('order') ?? 'asc'
-
-    const setQueryParams = (name: string, value: string) => {
-        setSearchParams((prev) => {
-            prev.set(name, value);
-            return prev;
-        })
-    }
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            const value = inputRef.current?.value ?? '';
-            setQueryParams('name', value)
-        }
-    }
-
-    const handleSelected = (param: string, value: string) => {
-        if (value === 'all' || value === '0') {
-            clearFilter(param)
-            return
-        }
-        setQueryParams(param, value);
-    }
-
-    const handleOrderBy = () => {
-        const isOrderByAsc = selectedOrderBy.toLowerCase() === 'asc';
-        const value = isOrderByAsc ? 'desc' : 'asc';
-        setQueryParams('order', value);
-    }
-
-    const clearFilter = (param: string) => {
-        setSearchParams((prev) => {
-            prev.delete(param);
-            return prev
-        });
-    }
-
-    const clearAllFilters = () => {
-        setSearchParams((prev) => {
-            prev.delete('team');
-            prev.delete('category');
-            prev.delete('universe');
-            prev.delete('status');
-            prev.set('strength', '0')
-            return prev
-        });
-    }
-
 
     return (
         <>
@@ -100,7 +52,7 @@ export const SearchControls = () => {
                         Filters
                     </Button>
 
-                    <Button variant={selectedOrderBy === 'desc' ? "default" : "outline"} className="h-12" onClick={handleOrderBy}>
+                    <Button variant={selectedOrderBy === 'desc' ? "default" : "outline"} className="h-12" onClick={() => handleOrderBy(selectedOrderBy)}>
                         {selectedOrderBy === 'desc' ?
                             <SortAsc className="h-4 w-4 mr-2" /> :
                             <SortDesc className="h-4 w-4 mr-2" />}
