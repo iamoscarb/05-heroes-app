@@ -11,8 +11,9 @@ export const SearchPage = () => {
 
     const name = searchParams.get('name') ?? undefined;
     const strength = searchParams.get('strength') ?? undefined;
+    const team = searchParams.get('team') ?? undefined;
 
-    const { data: heroesResponse = [] } = useSeachHero({ name, strength })
+    const { data: heroesResponse = [] } = useSeachHero({ name, strength, team })
     //useQuery
 
     if (!heroesResponse) return <h1>Loading....</h1>

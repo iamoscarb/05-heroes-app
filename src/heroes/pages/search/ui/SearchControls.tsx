@@ -10,7 +10,16 @@ import {
     AccordionContent,
     AccordionItem,
 } from "@/components/ui/accordion"
+import { CustomSelect } from "@/components/custom/CustomSelect"
 
+const teams = [
+    { value: 'all', text: 'All Teams' },
+    { value: 'Liga de la Justicia', text: 'Liga de la Justicia' },
+    { value: 'X-Men', text: 'X-Men' },
+    { value: 'Batfamilia', text: 'Batfamilia' },
+    { value: 'Vengadores', text: 'Vengadores' },
+    { value: 'Solo', text: 'Solo' }
+]
 
 export const SearchControls = () => {
 
@@ -18,6 +27,7 @@ export const SearchControls = () => {
     const [searchParams, setSearchParams] = useSearchParams({});
     const activeAccordion = searchParams.get('active-accordion') ?? '';
     const selectedStrength = searchParams.get('strength') ?? '0';
+    const selectedTeam = searchParams.get('team') ?? 'all';
 
     const setQueryParams = (name: string, value: string) => {
         setSearchParams((prev) => {
@@ -92,9 +102,7 @@ export const SearchControls = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Team</label>
-                                    <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                        All teams
-                                    </div>
+                                    <CustomSelect onValueChange={(data) => setQueryParams('team', data)} options={teams} selectedValue={selectedTeam} />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Category</label>
