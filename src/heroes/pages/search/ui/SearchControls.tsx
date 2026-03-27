@@ -1,4 +1,4 @@
-import { Search, Filter, SortAsc, Grid, Plus } from "lucide-react"
+import { Search, Filter, SortAsc, Grid, Plus, SortDesc } from "lucide-react"
 import { useRef } from "react"
 import { useSearchParams } from "react-router"
 
@@ -20,6 +20,7 @@ export const SearchControls = () => {
     const selectedCategory = searchParams.get('category') ?? 'all';
     const selectedUniverse = searchParams.get('universe') ?? 'all';
     const selectedStatus = searchParams.get('status') ?? 'all';
+    const selectedOrderBy = searchParams.get('order') ?? 'asc'
 
     const setQueryParams = (name: string, value: string) => {
         setSearchParams((prev) => {
@@ -41,6 +42,12 @@ export const SearchControls = () => {
             return
         }
         setQueryParams(param, value);
+    }
+
+    const handleOrderBy = () => {
+        const isOrderByAsc = selectedOrderBy.toLowerCase() === 'asc';
+        const value = isOrderByAsc ? 'desc' : 'asc';
+        setQueryParams('order', value);
     }
 
     const clearFilter = (param: string) => {
@@ -93,8 +100,10 @@ export const SearchControls = () => {
                         Filters
                     </Button>
 
-                    <Button variant="outline" className="h-12">
-                        <SortAsc className="h-4 w-4 mr-2" />
+                    <Button variant={selectedOrderBy === 'desc' ? "default" : "outline"} className="h-12" onClick={handleOrderBy}>
+                        {selectedOrderBy === 'desc' ?
+                            <SortAsc className="h-4 w-4 mr-2" /> :
+                            <SortDesc className="h-4 w-4 mr-2" />}
                         Sort by Name
                     </Button>
 
