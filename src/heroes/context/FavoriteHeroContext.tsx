@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState, type PropsWithChildren } from "react";
 import type { Hero } from "../types/hero.interface";
+import { useFavoritesValidation } from "../hooks/useFavoritesValidation";
 
 interface FavoriteHeroContext {
     //state
@@ -14,8 +15,7 @@ interface FavoriteHeroContext {
 export const FavoriteHeroContext = createContext({} as FavoriteHeroContext);
 
 const getFavortiesFromLocalStorage = () => {
-    const favorites = localStorage.getItem('favorites');
-    return favorites ? JSON.parse(favorites) : [];
+    return useFavoritesValidation() ?? [];
 }
 
 export const FavoriteHeroProvider = ({ children }: PropsWithChildren) => {
