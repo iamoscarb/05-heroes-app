@@ -5,21 +5,10 @@ import { useSearchParams } from "react-router"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-} from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, } from "@/components/ui/accordion"
 import { CustomSelect } from "@/components/custom/CustomSelect"
+import { teams, categories, universes, statuses } from "../data/selectData"
 
-const teams = [
-    { value: 'all', text: 'All Teams' },
-    { value: 'Liga de la Justicia', text: 'Liga de la Justicia' },
-    { value: 'X-Men', text: 'X-Men' },
-    { value: 'Batfamilia', text: 'Batfamilia' },
-    { value: 'Vengadores', text: 'Vengadores' },
-    { value: 'Solo', text: 'Solo' }
-]
 
 export const SearchControls = () => {
 
@@ -28,6 +17,9 @@ export const SearchControls = () => {
     const activeAccordion = searchParams.get('active-accordion') ?? '';
     const selectedStrength = searchParams.get('strength') ?? '0';
     const selectedTeam = searchParams.get('team') ?? 'all';
+    const selectedCategory = searchParams.get('category') ?? 'all';
+    const selectedUniverse = searchParams.get('universe') ?? 'all';
+    const selectedStatus = searchParams.get('status') ?? 'all';
 
     const setQueryParams = (name: string, value: string) => {
         setSearchParams((prev) => {
@@ -42,6 +34,33 @@ export const SearchControls = () => {
             setQueryParams('name', value)
         }
     }
+
+    const handleSelected = (param: string, value: string) => {
+        if (value === 'all' || value === '0') {
+            clearFilter(param)
+            return
+        }
+        setQueryParams(param, value);
+    }
+
+    const clearFilter = (param: string) => {
+        setSearchParams((prev) => {
+            prev.delete(param);
+            return prev
+        });
+    }
+
+    const clearAllFilters = () => {
+        setSearchParams((prev) => {
+            prev.delete('team');
+            prev.delete('category');
+            prev.delete('universe');
+            prev.delete('status');
+            prev.set('strength', '0')
+            return prev
+        });
+    }
+
 
     return (
         <>
@@ -61,7 +80,6 @@ export const SearchControls = () => {
                         onClick={() => {
                             if (activeAccordion === 'advance-filters') {
                                 //setQueryParams('active-accordion', '')
-
                                 setSearchParams((prev) => {
                                     prev.delete('active-accordion'); //elimina el valor del param
                                     return prev
@@ -97,36 +115,32 @@ export const SearchControls = () => {
                         <div className="bg-white rounded-lg p-6 mb-8 shadow-sm border">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-lg font-semibold">Advanced Filters</h3>
-                                <Button variant="ghost">Clear All</Button>
+                                <Button variant="ghost" onClick={clearAllFilters}>Clear All</Button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Team</label>
-                                    <CustomSelect onValueChange={(data) => setQueryParams('team', data)} options={teams} selectedValue={selectedTeam} />
+                                    <CustomSelect key='team' onValueChange={(data) => handleSelected('team', data)} options={teams} selectedValue={selectedTeam} />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Category</label>
-                                    <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                        All categories
-                                    </div>
+                                    <CustomSelect key='category' onValueChange={(data) => handleSelected('category', data)} options={categories} selectedValue={selectedCategory} />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Universe</label>
-                                    <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                        All universes
-                                    </div>
+                                    <CustomSelect key='universe' onValueChange={(data) => handleSelected('universe', data)} options={universes} selectedValue={selectedUniverse} />
+
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Status</label>
-                                    <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                                        All statuses
-                                    </div>
+                                    <CustomSelect key='status' onValueChange={(data) => handleSelected('status', data)} options={statuses} selectedValue={selectedStatus} />
+
                                 </div>
                             </div>
                             <div className="mt-4">
                                 <label className="text-sm font-medium">Minimum Strength: {selectedStrength}/10</label>
-                                <Slider defaultValue={[+selectedStrength]} max={10} step={1}
-                                    onValueChange={value => setQueryParams('strength', value[0].toString())} />
+                                <Slider defaultValue={[+selectedStrength]} max={10} step={1} value={[+selectedStrength]}
+                                    onValueChange={value => handleSelected('strength', value[0].toString())} />
                             </div>
                         </div>
                     </AccordionContent>

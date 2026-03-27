@@ -33,7 +33,7 @@ export const CustomSelect = ({ options, placeholder = 'Selecciona una opción', 
                 <SelectGroup>
                     {
                         options.map(select => (
-                            <SelectItem value={select.value}>{select.text}</SelectItem>
+                            <SelectItem key={select.value} value={select.value}>{select.text}</SelectItem>
                         ))
                     }
                 </SelectGroup>

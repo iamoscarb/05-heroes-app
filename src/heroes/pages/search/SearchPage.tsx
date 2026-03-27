@@ -12,8 +12,11 @@ export const SearchPage = () => {
     const name = searchParams.get('name') ?? undefined;
     const strength = searchParams.get('strength') ?? undefined;
     const team = searchParams.get('team') ?? undefined;
+    const category = searchParams.get('category') ?? undefined;
+    const universe = searchParams.get('universe') ?? undefined;
+    const status = searchParams.get('status') ?? undefined;
 
-    const { data: heroesResponse = [] } = useSeachHero({ name, strength, team })
+    const { data: heroesResponse = [] } = useSeachHero({ name, strength, team, category, universe, status })
     //useQuery
 
     if (!heroesResponse) return <h1>Loading....</h1>
@@ -35,7 +38,7 @@ export const SearchPage = () => {
                 heroesResponse.length > 0 ? (
                     <HeroGrid heroes={heroesResponse} />
                 ) : (
-                    <h4 className="text-center font-bold pb-10">No se encontró información</h4>
+                    <h4 className="text-center font-bold pb-10">No hay información que mostrar</h4>
                 )
             }
         </>
