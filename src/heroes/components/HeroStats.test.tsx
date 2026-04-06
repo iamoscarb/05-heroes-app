@@ -4,10 +4,37 @@ import { describe, expect, test, vi } from "vitest";
 import { HeroStats } from "./HeroStats";
 import { useHeroSummary } from "../hooks/useHeroSummary";
 import type { SummaryInformationResponse } from "../types/summary-information.response";
+import { FavoriteHeroProvider } from "../context/FavoriteHeroContext";
 
 
 vi.mock('../hooks/useHeroSummary');
-const mockUseHeroSummaty = vi.mocked(useHeroSummary);
+const mockUseHeroSummary = vi.mocked(useHeroSummary);
+
+const mockHero = {
+    "id": "1",
+    "name": "Clark Kent",
+    "slug": "clark-kent",
+    "alias": "Superman",
+    "powers": [
+        "Súper fuerza",
+        "Vuelo",
+        "Visión de calor",
+        "Visión de rayos X",
+        "Invulnerabilidad",
+        "Súper velocidad"
+    ],
+    "description": "El Último Hijo de Krypton, protector de la Tierra y símbolo de esperanza para toda la humanidad.",
+    "strength": 10,
+    "intelligence": 8,
+    "speed": 9,
+    "durability": 10,
+    "team": "Liga de la Justicia",
+    "image": "1.jpeg",
+    "firstAppearance": "1938",
+    "status": "Active",
+    "category": "Hero",
+    "universe": "DC"
+}
 
 const mockSumaryData = {
     "totalHeroes": 25,
@@ -75,18 +102,20 @@ const queryClient = new QueryClient({
 const renderHeroStats = (mockData?: Partial<SummaryInformationResponse>) => {
 
     if (mockData) {
-        mockUseHeroSummaty.mockReturnValue({
+        mockUseHeroSummary.mockReturnValue({
             data: mockData
         } as unknown as ReturnType<typeof useHeroSummary>);
     } else {
-        mockUseHeroSummaty.mockReturnValue({
+        mockUseHeroSummary.mockReturnValue({
             data: undefined
         } as unknown as ReturnType<typeof useHeroSummary>);
     }
 
     return render(
         <QueryClientProvider client={queryClient}>
-            <HeroStats />
+            <FavoriteHeroProvider>
+                <HeroStats />
+            </FavoriteHeroProvider>
         </QueryClientProvider>
     )
 }
@@ -104,5 +133,17 @@ describe('HeroStats', () => {
         expect(container).toMatchSnapshot();
         expect(screen.getByText('Total Characters')).toBeDefined();
         expect(screen.getByText('Favoritos')).toBeDefined();
+        expect(screen.getByText('Fuerte')).toBeDefined();
+    });
+
+    test('should change the percentage of favorites when hero is added to favorites', () => {
+        localStorage.setItem('favorites', JSON.stringify([mockHero]));
+
+        renderHeroStats(mockSumaryData);
+        const favortiePercentageElement = screen.getByTestId('favorite-percentage');
+        expect(favortiePercentageElement.innerHTML).toContain('4.00%');
+
+        const favortieCountElement = screen.getByTestId('favorite-count');
+        expect(favortieCountElement.innerHTML).toContain('1');
     })
 })
