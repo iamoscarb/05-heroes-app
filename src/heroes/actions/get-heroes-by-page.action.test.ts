@@ -78,7 +78,6 @@ describe('getHereosByPageAction', () => {
 
         await getHeroesByPageAction(2, 10, 'heroes');
         const params = heroesApiMock.history.get[0].params;
-        console.log(params)
         expect(params).toStrictEqual({ limit: 10, offset: 10, category: 'heroes' })
     });
 })
