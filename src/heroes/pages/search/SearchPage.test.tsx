@@ -17,7 +17,12 @@ vi.mock('@/heroes/components/HeroGrid', () => ({
             ))
         }
     </div>)
-}))
+}));
+
+vi.mock('./ui/SearchControls', () => ({
+    SearchControls: () => <div data-testid="search-controls"></div>
+}));
+
 const queryClient = new QueryClient();
 
 const renderSearchPage = (initialEntries: string[] = ['']) => {
